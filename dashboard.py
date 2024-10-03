@@ -18,7 +18,7 @@ def load_day_data():
 
 # Fungsi untuk memuat data hour.csv
 def load_hour_data():
-    file_path_hour = (r'data/hour.csv)
+    file_path_hour = (r'data/hour.csv')
     if os.path.exists(file_path_hour):
         df_hour = pd.read_csv(file_path_hour)
         return df_hour
