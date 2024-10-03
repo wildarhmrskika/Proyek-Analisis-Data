@@ -28,15 +28,21 @@ def load_hour_data():
 
 # Menyiapkan kolom 'dateday' untuk pengolahan data berdasarkan tanggal
 def prepare_date_column(df):
-    if 'dateday' in df.columns:
-        df['dateday'] = pd.to_datetime(df['dateday'])
-    elif {'year', 'month', 'day'}.issubset(df.columns):
-        df['dateday'] = pd.to_datetime(df[['year', 'month', 'day']])
-    else:
-        st.error("Tidak ditemukan kolom 'dateday', atau kolom lain yang memungkinkan pembentukan tanggal.")
+    if df is not None:  # Pastikan data tidak kosong
+        if 'dateday' in df.columns:
+            df['dateday'] = pd.to_datetime(df['dateday'])
+        elif {'year', 'month', 'day'}.issubset(df.columns):
+            df['dateday'] = pd.to_datetime(df[['year', 'month', 'day']])
+        else:
+            st.error("Tidak ditemukan kolom 'dateday', atau kolom lain yang memungkinkan pembentukan tanggal.")
     return df
 
-day_df = prepare_date_column(day_df)
+# Memuat data day.csv
+day_df = load_day_data()
+
+# Pastikan data berhasil dimuat sebelum memproses kolom 'dateday'
+if day_df is not None:
+    day_df = prepare_date_column(day_df)
 
 with st.sidebar:
     # Menambahkan gambar di sidebar
@@ -49,8 +55,10 @@ end_date = st.sidebar.date_input("Pilih Tanggal Akhir", pd.to_datetime('2012-12-
 
 # Menyaring dataset berdasarkan periode waktu yang dipilih
 def filter_data_by_date(df, start_date, end_date):
-    filtered_df = df[(df['dateday'] >= pd.to_datetime(start_date)) & (df['dateday'] <= pd.to_datetime(end_date))]
-    return filtered_df
+    if df is not None:  # Pastikan data tidak kosong
+        filtered_df = df[(df['dateday'] >= pd.to_datetime(start_date)) & (df['dateday'] <= pd.to_datetime(end_date))]
+        return filtered_df
+    return None
 
 filtered_day_df = filter_data_by_date(day_df, start_date, end_date)
 
@@ -123,16 +131,21 @@ st.markdown("""
 **Analisis data penyewaan sepeda untuk melihat tren berdasarkan hari kerja, akhir pekan, hari libur, dan jam tertentu.** 
 """)
 
-# Sidebar for navigation
-st.sidebar.title("🌟 Navigasi")
-st.sidebar.write("Pilih opsi analisis yang tersedia di bawah:")
-option = st.sidebar.selectbox("Pilih Analisis", 
-                            ["Perbandingan Hari Kerja vs Akhir Pekan", 
-                            "Pengaruh Hari Libur", 
-                            "Penyewaan Berdasarkan Jam",
-                            "Deteksi Anomali (Z-score)",
-                            "Deteksi Anomali (Isolation Forest)",
-                            "Rata-rata Penyewaan Berdasarkan Cuaca"])
+# Pastikan navigasi berfungsi setelah data berhasil dimuat
+if day_df is not None:
+    # Sidebar for navigation
+    st.sidebar.title("🌟 Navigasi")
+    st.sidebar.write("Pilih opsi analisis yang tersedia di bawah:")
+    option = st.sidebar.selectbox("Pilih Analisis", 
+                                ["Perbandingan Hari Kerja vs Akhir Pekan", 
+                                "Pengaruh Hari Libur", 
+                                "Penyewaan Berdasarkan Jam",
+                                "Deteksi Anomali (Z-score)",
+                                "Deteksi Anomali (Isolation Forest)",
+                                "Rata-rata Penyewaan Berdasarkan Cuaca"])
+
+    # Analisis berdasarkan opsi yang dipilih
+    # Tambahkan logika pemrosesan seperti di kode awal (misalnya "Perbandingan Hari Kerja vs Akhir Pekan")
 
 # Load data
 df_day_cleaned = load_day_data()
