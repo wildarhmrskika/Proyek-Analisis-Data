@@ -8,7 +8,7 @@ from sklearn.ensemble import IsolationForest
 
 # Fungsi untuk memuat data day.csv
 def load_day_data():
-    file_path_day = r'C:\Users\ASUS\Downloads\Bike-sharing-dataset\day.csv'
+    file_path_day = r'Bike-sharing-dataset/day.csv'
     if os.path.exists(file_path_day):
         df_day = pd.read_csv(file_path_day)
         return df_day
@@ -18,7 +18,7 @@ def load_day_data():
 
 # Fungsi untuk memuat data hour.csv
 def load_hour_data():
-    file_path_hour = r'C:\Users\ASUS\Downloads\Bike-sharing-dataset\hour.csv'
+    file_path_hour = r'Bike-sharing-dataset/hour.csv'
     if os.path.exists(file_path_hour):
         df_hour = pd.read_csv(file_path_hour)
         return df_hour
