@@ -26,6 +26,34 @@ def load_hour_data():
         st.error(f"File {file_path_hour} tidak ditemukan.")
         return None
 
+# Menyiapkan kolom 'dateday' untuk pengolahan data berdasarkan tanggal
+def prepare_date_column(df):
+    if 'dateday' in df.columns:
+        df['dateday'] = pd.to_datetime(df['dateday'])
+    elif {'year', 'month', 'day'}.issubset(df.columns):
+        df['dateday'] = pd.to_datetime(df[['year', 'month', 'day']])
+    else:
+        st.error("Tidak ditemukan kolom 'dateday', atau kolom lain yang memungkinkan pembentukan tanggal.")
+    return df
+
+day_df = prepare_date_column(day_df)
+
+with st.sidebar:
+    # Menambahkan gambar di sidebar
+    st.image("https://github.com/wildarhmrskika/Proyek-Analisis-Data/blob/main/assets/pngtree-cartoon-characters-ride-bicycles-png-image_4141664.jpg")
+
+# Sidebar untuk pemilihan periode waktu
+st.sidebar.title('🗓 Pilih Periode Waktu')
+start_date = st.sidebar.date_input("Pilih Tanggal Mulai", pd.to_datetime('2011-01-01'))
+end_date = st.sidebar.date_input("Pilih Tanggal Akhir", pd.to_datetime('2012-12-31'))
+
+# Menyaring dataset berdasarkan periode waktu yang dipilih
+def filter_data_by_date(df, start_date, end_date):
+    filtered_df = df[(df['dateday'] >= pd.to_datetime(start_date)) & (df['dateday'] <= pd.to_datetime(end_date))]
+    return filtered_df
+
+filtered_day_df = filter_data_by_date(day_df, start_date, end_date)
+
 # Apply custom CSS for styling
 def apply_custom_css():
     st.markdown("""
