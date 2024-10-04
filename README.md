@@ -12,8 +12,9 @@ conda activate main-ds
 pip install pandas 
 pip install matplotlib 
 pip install seaborn 
-pip install babel 
-pip install plotly
+pip install scipy
+pip install scikit-learn
+
 ```
 
 ## Jalankan Streamlit
